@@ -1,9 +1,12 @@
 package com.practiceWeek1.pracWeek1.controllers;
 
 import com.practiceWeek1.pracWeek1.dto.EmployeeDTO;
+import com.practiceWeek1.pracWeek1.entity.EmployeeEntity;
+import com.practiceWeek1.pracWeek1.repositories.EmployeeRepository;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @RestController
 @RequestMapping(path = "/employees")
@@ -14,19 +17,28 @@ public class EmployeeController {
 //        return " Hello : Vinil";
 //    }
 
+    private final EmployeeRepository employeeRepository;
+
+    public EmployeeController(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+
     @GetMapping("/{employeeID}")
-        public EmployeeDTO getEmpById(@PathVariable Long employeeID){
-            return new EmployeeDTO(employeeID , "Vinil","vinil@gmail.com",23, LocalDate.of(2025,06,29),true);
+        public EmployeeEntity getEmpById(@PathVariable(name = "employeeID") Long id){
+            //return new EmployeeDTO(employeeID , "Vinil","vinil@gmail.com",23, LocalDate.of(2025,06,29),true);
+        return employeeRepository.findById(id).orElse(null);
         }
 
     @GetMapping//(path = "/employee")
-        public String getAllEmp(@RequestParam Integer age) {
-        return "Hi My age is :" + age;
+        public List<EmployeeEntity> getAllEmp(@RequestParam Integer age) {
+//        return "Hi My age is :" + age;
+        return employeeRepository.findAll();
     }
 
     @PostMapping
-    public EmployeeDTO createNewEmp(@RequestBody EmployeeDTO inputEmp){
-        return inputEmp;
+    public EmployeeEntity createNewEmp(@RequestBody EmployeeEntity inputEmp){
+        return employeeRepository.save(inputEmp);
+        //return inputEmp;
     }
 
 }
