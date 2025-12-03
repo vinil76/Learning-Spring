@@ -1,5 +1,7 @@
 package com.practiceWeek1.pracWeek1.dto;
 
+//import lombok.Setter;
+
 import java.time.LocalDate;
 
 public class EmployeeDTO {
@@ -35,10 +37,6 @@ public class EmployeeDTO {
 
     public String getName() {
         return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getEmail() {
