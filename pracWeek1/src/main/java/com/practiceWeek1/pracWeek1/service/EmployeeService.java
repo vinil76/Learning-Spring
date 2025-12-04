@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,11 +25,16 @@ public class EmployeeService {
         this.mapper = mapper;
     }
 
-    public EmployeeDTO getEmployeeById(Long id) {
-        EmployeeEntity employeeEntity = employeeRepository.findById(id).orElse(null);
-        //ModelMapper mapper = new ModelMapper();
-        return mapper.map(employeeEntity,EmployeeDTO.class);
-    }
+//    public EmployeeDTO getEmployeeById(Long id) {
+//        EmployeeEntity employeeEntity = employeeRepository.findById(id).orElse(null);
+//        //ModelMapper mapper = new ModelMapper();
+//        return mapper.map(employeeEntity,EmployeeDTO.class);
+//    }
+        public Optional<EmployeeDTO> getEmployeeById(Long id) {
+            return employeeRepository.findById(id)
+                .map(emp -> mapper.map(emp, EmployeeDTO.class));
+}
+
 
     public List<EmployeeDTO> findAll() {
         List<EmployeeEntity> employeeEntities =  employeeRepository.findAll();

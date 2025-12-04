@@ -37,6 +37,8 @@ public class EmployeeDTO {
     @JsonProperty("IsActive")
     private Boolean isActive;
 
+
+
 //    public EmployeeDTO() {}
 //
 //    public EmployeeDTO(Long id, String name, String email, Integer age, LocalDate dto, Boolean isActive) {

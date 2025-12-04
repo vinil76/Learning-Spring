@@ -5,11 +5,14 @@ import com.practiceWeek1.pracWeek1.entity.EmployeeEntity;
 import com.practiceWeek1.pracWeek1.repositories.EmployeeRepository;
 import com.practiceWeek1.pracWeek1.service.EmployeeService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 @RestController
 @RequestMapping(path = "/employees")
@@ -44,8 +47,15 @@ public class EmployeeController1 {
 @GetMapping(path = "/{employeeId}")
 public EmployeeDTO getEmployeeById(@PathVariable (name = "employeeId") Long id){
    //return employeeRepository.findById(id).orElse(null);
-    return employeeServices.getEmployeeById(id);
+    return employeeServices.getEmployeeById(id).
+             orElseThrow(() -> new NoSuchElementException("Employee not found : "+id));
 }
+
+//    @ExceptionHandler(NoSuchElementException.class)
+//    public ResponseEntity<String> handleEmployeeNotFound(NoSuchElementException exception) {
+//        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+//                .body(exception.getMessage());
+//    }
 
     @GetMapping("/all")  // GET /employees/all
     public List<EmployeeDTO> getAllEmployees(){
