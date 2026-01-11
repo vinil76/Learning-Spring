@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,32 +20,36 @@ import org.springframework.security.web.SecurityFilterChain;
 public class WebSecurityConfig {
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity
+    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .csrf(csrf -> csrf.disable())
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/employees").permitAll()
-                        .requestMatchers("/employees/**").hasAnyRole("ADMIN")
-                        .anyRequest().authenticated())
-                .formLogin(Customizer.withDefaults());
+                        .requestMatchers("/posts", "/error", "/auth/**").permitAll()
+                        .requestMatchers("/employees/**").hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                );
 
-        return httpSecurity.build();
+        return http.build();
     }
-    @Bean
-    UserDetailsService myInMemoryUserDetailsService(){
-        UserDetails userDetails = User
-                .withUsername("vinil")
-                .password(passwordEncoder().encode("pass"))
-                .roles("USER")
-                .build();
-
-        UserDetails adminDetails = User
-                .withUsername("admin")
-                .password(passwordEncoder().encode("admin"))
-                .roles("ADMIN")
-                .build();
-
-        return new InMemoryUserDetailsManager(userDetails,adminDetails);
-    }
+//    @Bean
+//    UserDetailsService myInMemoryUserDetailsService(){
+//        UserDetails userDetails = User
+//                .withUsername("vinil")
+//                .password(passwordEncoder().encode("pass"))
+//                .roles("USER")
+//                .build();
+//
+//        UserDetails adminDetails = User
+//                .withUsername("admin")
+//                .password(passwordEncoder().encode("admin"))
+//                .roles("ADMIN")
+//                .build();
+//
+//        return new InMemoryUserDetailsManager(userDetails,adminDetails);
+//    }
 
     @Bean
     PasswordEncoder passwordEncoder() {
